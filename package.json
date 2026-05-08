@@ -1,0 +1,27 @@
+{
+  "name": "projeto_1_projoo",
+  "version": "1.0.0",
+  "description": "Estrutura inicial do projeto com suporte a TypeScript.",
+  "main": "index.js",
+  "directories": {
+    "doc": "docs"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/KauanQuinzote/Projeto_1_PROJOO.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/KauanQuinzote/Projeto_1_PROJOO/issues"
+  },
+  "homepage": "https://github.com/KauanQuinzote/Projeto_1_PROJOO#readme",
+  "devDependencies": {
+    "typescript": "^6.0.3"
+  }
+}
