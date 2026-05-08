@@ -21,6 +21,7 @@
     "url": "https://github.com/KauanQuinzote/Projeto_1_PROJOO/issues"
   },
   "homepage": "https://github.com/KauanQuinzote/Projeto_1_PROJOO#readme",
+  "type": "module",
   "devDependencies": {
     "typescript": "^6.0.3"
   }
