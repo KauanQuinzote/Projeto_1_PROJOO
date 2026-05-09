@@ -1,6 +1,8 @@
-import type { UserRole, IUser } from "./interfaces/user.interface";
 
-class Professor implements IUser {
+
+import type { UserRole, IUser } from "./interfaces/user.interface.js";
+
+export class Professor implements IUser {
     id: number;
     name: string;
     email: string;
@@ -19,7 +21,7 @@ class Professor implements IUser {
     }
 }
 
-class Student implements IUser {
+export class Student implements IUser {
     id: number;
     name: string;
     email: string;
@@ -37,5 +39,3 @@ class Student implements IUser {
         this.updatedAt = new Date();
     }
 }
-
-export { Professor, Student };

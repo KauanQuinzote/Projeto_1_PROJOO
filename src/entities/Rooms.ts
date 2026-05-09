@@ -1,6 +1,6 @@
-import type { IRoom } from './interfaces/room.interface';
+import type { IRoom } from './interfaces/room.interface.js';
 
-class Lab implements IRoom {
+export class Lab implements IRoom {
     id: number;
     type: 'Lab' = 'Lab';
     reserved: boolean;
@@ -15,7 +15,7 @@ class Lab implements IRoom {
     }
 }
 
-class Individual implements IRoom {
+export class Individual implements IRoom {
     id: number;
     type: 'Individual' = 'Individual';
     reserved: boolean;
@@ -30,7 +30,7 @@ class Individual implements IRoom {
     }
 }
 
-class Group implements IRoom {
+export class Group implements IRoom {
     id: number;
     type: 'Group' = 'Group';
     reserved: boolean;
@@ -44,4 +44,3 @@ class Group implements IRoom {
         this.updatedAt = new Date();
     }
 }
-export = { Lab, Individual, Group };
