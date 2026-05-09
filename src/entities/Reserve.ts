@@ -1,6 +1,7 @@
 import { IReservation } from './interfaces/reservation.interface.js'
 import type { IRoom } from './interfaces/room.interface.js';
 import { IUser } from './interfaces/user.interface.js';
+import { Strategy , ReservaPrioritaria } from './strategy.js';
 
 export class Reservation implements IReservation {
     id: number;
@@ -12,6 +13,8 @@ export class Reservation implements IReservation {
     updatedAt: Date;
     user: IUser | undefined;
     room: IRoom | undefined;
+    politicaDeReserva: Strategy = new ReservaPrioritaria(); //strategia Defaut
+
 
     constructor(
         id: number,
@@ -31,16 +34,17 @@ export class Reservation implements IReservation {
         this.updatedAt = new Date();
         this.user = users.find(user => user.id === this.userId)
         this.room = rooms.find(room => room.id === roomId) as IRoom;
-        
-    }
-
-    receive(users: IUser[]): IUser | undefined {
-        return users.find(user => user.id === this.userId)
     }
     
-    setStrategy(){
-
+    setStrategy(newStrategy: Strategy){
+        this.politicaDeReserva = newStrategy
     }
 
+    print () {
+        if (this.user && this.room)
+            console.log(`Reservation ${this.id}: ${this.user.name} - ${this.room.type}`);
+        else
+            console.log(`Reservation ${this.id}: No user or room found`);
+    }
 
 }
