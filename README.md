@@ -8,7 +8,12 @@ Estrutura inicial do projeto com suporte a TypeScript.
 
 #
 
-## Version
+## Version 1.1.0
+AddReservation
+- adicioado 2 classes, reserva e conntrole dee reserva
+-ainda falta implementar a função stratregy que ficara responsavel de resevar a sala
+
+
 ## version 1.0.1 
 QuickFix
 - verbatimModuleSyntax: true: Essa opção obriga você a ser muito específico. Se você está importando apenas tipos, precisa usar o import type. Se tentar usar um import normal para uma interface, ele vai dar erro.

@@ -1,12 +1,14 @@
-import type { IRoom } from './room.interface';
-import type { IUser } from './user.interface';
+import type { IRoom } from './room.interface.js';
+import type { IUser } from './user.interface.js';
+
 
 export interface IReservation {
     id: number;
-    user: IUser;
-    room: IRoom;
+    user: IUser | undefined;
+    room: IRoom | undefined;
     startTime: Date;
     endTime: Date;
     createdAt: Date;
     updatedAt: Date;
+
 }
