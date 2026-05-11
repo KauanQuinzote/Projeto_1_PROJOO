@@ -15,12 +15,11 @@ export class ReservaNormal implements Strategy{
 
     execute(user: any, room: any, startTime: Date, endTime: Date, reservations: IReservation[]){
         //verificar se o quarto já está reservado para o período solicitado
-        const conflito = reservations.some(reservation => reservation!.room!.id === room.id && ConflitoAgenda(reservation.startTime, reservation.endTime, startTime, endTime));
+        const conflito = reservations.some(reservation => reservation!.room!.id === room.id && ConflitoAgenda(reservation.startTime, endTime, startTime, reservation.endTime));
         //elee sempre compara o mesmo quarto, e verifica se há conflito de horário usando a função ConflitoAgenda
         //nao esta muito eficinte, mas eh o quee temos por enquanto, pode ser melhorado futuramente usando um sistema de indexação ou banco de dados
         
         if (conflito) { //se houver conflito, a reserva não pode ser feita
-            console.log("A Sala já está reservada para o período solicitado.");
             return undefined;
         }
         const NovaReserva = new Reservation(user.id, room.id, startTime, endTime, user, room);

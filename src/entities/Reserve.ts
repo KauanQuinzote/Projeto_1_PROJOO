@@ -1,6 +1,7 @@
 import { IReservation } from './interfaces/reservation.interface.js'
 import type { IRoom } from './interfaces/room.interface.js';
 import { IUser } from './interfaces/user.interface.js';
+import { Gerenciamento } from './singleton.js';
 import { Strategy , ReservaNormal } from './strategy.js';
 
 export class ControlOfReservation {
@@ -12,6 +13,9 @@ export class ControlOfReservation {
     //chamada para resevar
     reserve (idUser: number, idRoom: number, startTime: Date, endTime: Date) {
         try {
+            if (startTime >= endTime) {
+                throw new Error('Start time must be before end time');
+            }
             const user = this.users.find(user => user.id === idUser);
             const room = this.rooms.find(room => room.id === idRoom);
             if (!user || !room) {
@@ -22,8 +26,12 @@ export class ControlOfReservation {
             if (reserva) {
                 this.reservations.push(reserva);
             }
-
-        } catch (error) {}
+            console.log(`Reserva ${reserva ? 'realizada com sucesso' : 'falhou'}`);
+        } catch (error) {
+            if (error instanceof Error) {
+                console.error(error.message);
+            }
+        }
     }
 
     cancelReservation (idReservation: number) {
@@ -63,8 +71,7 @@ export class Reservation implements IReservation {
         room: IRoom | undefined
     ) {
         //id gerado pelo sistema usando config do singleton
-        this.id = Math.floor(Math.random() * 1000000);
-        //por enquato gerado aleatoriamente, mas pode ser implementado um sistema de ID mais robusto
+        this.id = Gerenciamento.getInstance().NReservation++;
 
         this.userId = userId;
         this.roomId = roomId;
@@ -80,7 +87,7 @@ export class Reservation implements IReservation {
     
     public print () {
         if (this.user && this.room)
-            console.log(`Reservation ${this.id}: ${this.user.name} - ${this.room.type}`);
+            console.log(`Reservation ${this.id}: ${this.user.name} - ${this.room.type} | ${this.startTime} to ${this.endTime}`);
         else
             console.log(`Reservation ${this.id}: No user or room found`);
     }
@@ -88,8 +95,12 @@ export class Reservation implements IReservation {
 }
 
 export function ConflitoAgenda (dataInit1: Date, dataFim2: Date, dataInit2: Date, dataFim1: Date): boolean {
-    if (dataInit1 < dataFim2 && dataInit2 < dataFim1)//funçao qu compara conflito entre datas
-        return true; //verdadeiro para que nao tem conflito
-    else
-        return false; // false para caso haja conflito
+    console.log(`Comparando datas: ${dataInit1} - ${dataFim1} com ${dataInit2} - ${dataFim2}`);
+    if (dataInit1 <= dataFim2 && dataInit2 <= dataFim1) {//funçao qu compara conflito entre datas
+        console.log("A Sala já está reservada para o período solicitado.");
+        return true; //verdadeiro para que tem conflito
+    } else {
+        console.log("A Sala não está reservada para o período solicitado.");
+        return false; // false para caso nao haja conflito
+    }
 }
