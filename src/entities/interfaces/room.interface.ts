@@ -1,4 +1,4 @@
-type RoomType = 'Lab' | 'Individual' | 'Group';
+export type RoomType = 'Lab' | 'Individual' | 'Group';
 
 export interface IRoom {
   id: number;

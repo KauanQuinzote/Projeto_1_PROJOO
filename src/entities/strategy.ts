@@ -7,7 +7,21 @@ export interface Strategy {
 
 export class ReservaPrioritaria implements Strategy{
     execute(user: any, room: any, startTime: Date, endTime: Date, reservations: IReservation[]){
-        return undefined;
+        const conflito = reservations.some(reservation => reservation!.room!.id === room.id && ConflitoAgenda(reservation.startTime, endTime, startTime, reservation.endTime));
+        var NovaReserva: Reservation | undefined = undefined;
+        if (conflito) {
+            //encontrar a reserva que está em conflito
+            const reservaConflito = reservations.find(reservation => reservation!.room!.id === room.id && ConflitoAgenda(reservation.startTime, endTime, startTime, reservation.endTime));
+            if (reservaConflito) {
+                //cancelar a reserva em conflito
+                reservations.splice(reservations.indexOf(reservaConflito), 1);
+                console.log(`Reserva ${reservaConflito.id} cancelada para dar prioridade a nova reserva`);
+            }
+            NovaReserva = new Reservation(user.id, room.id, startTime, endTime, user, room);
+        }
+        NovaReserva = new Reservation(user.id, room.id, startTime, endTime, user, room);
+        return NovaReserva;
+        
     }
 }
 

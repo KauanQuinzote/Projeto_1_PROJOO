@@ -39,8 +39,8 @@ export class ControlOfReservation {
         if (!reservation) {
             throw new Error('Reservation not found');
         } else {
-            if (reservation.room)
-                reservation.room.reserved = false;
+            this.reservations.splice(this.reservations.indexOf(reservation), 1);
+            console.log(`Reserva ${reservation.id} cancelada com sucesso`);
         }
     }
 
