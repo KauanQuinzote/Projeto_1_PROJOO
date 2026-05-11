@@ -1,6 +1,5 @@
-
-
 import type { UserRole, IUser } from "./interfaces/user.interface.js";
+import { Gerenciamento } from "./singleton.js";
 
 export class Professor implements IUser {
     id: number;
@@ -11,8 +10,8 @@ export class Professor implements IUser {
     createdAt: Date;
     updatedAt: Date;
 
-    constructor(id: number, name: string, email: string, password: string) {
-        this.id = id;
+    constructor(name: string, email: string, password: string) {
+        this.id = this.id = Gerenciamento.getInstance().NUser++;
         this.name = name;
         this.email = email;
         this.password = password;
@@ -30,8 +29,8 @@ export class Student implements IUser {
     createdAt: Date;
     updatedAt: Date;
 
-    constructor(id: number, name: string, email: string, password: string) {
-        this.id = id;
+    constructor( name: string, email: string, password: string) {
+        this.id = this.id = Gerenciamento.getInstance().NUser++;
         this.name = name;
         this.email = email;
         this.password = password;

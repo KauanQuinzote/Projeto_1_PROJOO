@@ -14,6 +14,11 @@ Estrutura inicial do projeto com suporte a TypeScript.
 - [ ] Singleton
 - [ ] *Adicional* Decorator 
 
+## Version 1.2.0
+Add Singleton
+- adicionado gerencimento usando singleton
+- id de pessoas e de reserva atriuido automaticamente 
+
 ## Version 1.1.1
 Add PoliticaNormal
 - adicionado metodo de strategia normal para reserva de sala, ainda falta politica de prioridade,
@@ -22,8 +27,7 @@ Add PoliticaNormal
 ## Version 1.1.0
 AddReservation
 - adicioado 2 classes, reserva e conntrole dee reserva
--ainda falta implementar a função stratregy que ficara responsavel de resevar a sala
-
+- ainda falta implementar a função stratregy que ficara responsavel de resevar a sala
 
 ## version 1.0.1 
 QuickFix

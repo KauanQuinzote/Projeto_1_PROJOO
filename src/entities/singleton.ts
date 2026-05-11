@@ -5,10 +5,12 @@ export class Gerenciamento {
 
     public NReservation: number;
     public NUser: number;
+    public NRoom: number;
     
     private constructor () {  
         this.NReservation =  0;
         this.NUser = 0;
+        this.NRoom = 0;
     }
     
     get nReservation (): number {
