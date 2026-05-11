@@ -73,7 +73,7 @@ export class Individual implements IRoom {
     }
 }
 
-export class Group implements IRoom, ISubject {
+export class Group implements IRoom {
     id: number;
     type: 'Group' = 'Group';
     reserved: boolean;
