@@ -3,8 +3,8 @@
 export class Gerenciamento {
     private static instance: Gerenciamento;
 
-    private NReservation: number;
-    private NUser: number;
+    public NReservation: number;
+    public NUser: number;
     
     private constructor () {  
         this.NReservation =  0;
