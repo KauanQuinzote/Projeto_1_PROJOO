@@ -18,7 +18,7 @@ export class ControlOfReservation {
                 throw new Error('User or room not found');
             }
             //arrumar um jeito de retonar um IReservation
-            this.politicaDeReserva.execute()
+            this.politicaDeReserva.execute(user, room, startTime, endTime);
 
         } catch (error) {}
     }
@@ -28,7 +28,8 @@ export class ControlOfReservation {
         if (!reservation) {
             throw new Error('Reservation not found');
         } else {
-            //reservation.room.reserved = false;
+            if (reservation.room)
+                reservation.room.reserved = false;
         }
     }
 
@@ -51,24 +52,27 @@ export class Reservation implements IReservation {
     room: IRoom | undefined;
 
     constructor(
-        id: number,
         userId: number,
         roomId: number,
         startTime: Date,
         endTime: Date,
-        users: IUser[],
-        rooms: IRoom[]
+        user: IUser | undefined,
+        room: IRoom | undefined
     ) {
-        this.id = id;
+        //id gerado pelo sistema usando config do singleton
+        this.id = Math.floor(Math.random() * 1000000);
+        //por enquato gerado aleatoriamente, mas pode ser implementado um sistema de ID mais robusto
+
         this.userId = userId;
         this.roomId = roomId;
         this.startTime = startTime;
         this.endTime = endTime;
         this.createdAt = new Date();
         this.updatedAt = new Date();
-        this.user = users.find(user => user.id === this.userId)
-        this.room = rooms.find(room => room.id === roomId) as IRoom;
-        this.room.reserved = true;
+        this.user = user;
+        this.room = room;
+        if (this.room)
+            this.room.reserved = true;
     }
     
     public print () {
@@ -79,4 +83,11 @@ export class Reservation implements IReservation {
             console.log(`Reservation ${this.id}: No user or room found`);
     }
 
+}
+
+export function ConflitoAgenda (dataInit1: Date, dataFim2: Date, dataInit2: Date, dataFim1: Date): boolean {
+    if (dataInit1 < dataFim2 && dataInit2 < dataFim1)//funçao qu compara conflito entre datas
+        return false; //false para que nao tem conflito
+    else
+        return true // verdadeiro para caso haja conflito
 }
