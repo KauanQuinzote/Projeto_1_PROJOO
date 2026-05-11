@@ -7,7 +7,7 @@ export class ControlOfReservation {
     politicaDeReserva: Strategy = new ReservaNormal(); //strategia Defaut
     users: IUser[] = [];
     rooms: IRoom[] = [];
-    reservations: IReservation[] = [];
+    reservations: Reservation[] = [];
     
     //chamada para resevar
     reserve (idUser: number, idRoom: number, startTime: Date, endTime: Date) {
@@ -17,8 +17,11 @@ export class ControlOfReservation {
             if (!user || !room) {
                 throw new Error('User or room not found');
             }
-            //arrumar um jeito de retonar um IReservation
-            this.politicaDeReserva.execute(user, room, startTime, endTime);
+            console.log(`Tentando reservar a sala ${room.id} para o usuário ${user.name} no período de ${startTime} a ${endTime}`);
+            const reserva = this.politicaDeReserva.execute(user, room, startTime, endTime, this.reservations);
+            if (reserva) {
+                this.reservations.push(reserva);
+            }
 
         } catch (error) {}
     }
@@ -76,7 +79,6 @@ export class Reservation implements IReservation {
     }
     
     public print () {
-        console.log("teste")
         if (this.user && this.room)
             console.log(`Reservation ${this.id}: ${this.user.name} - ${this.room.type}`);
         else
@@ -87,7 +89,7 @@ export class Reservation implements IReservation {
 
 export function ConflitoAgenda (dataInit1: Date, dataFim2: Date, dataInit2: Date, dataFim1: Date): boolean {
     if (dataInit1 < dataFim2 && dataInit2 < dataFim1)//funçao qu compara conflito entre datas
-        return false; //false para que nao tem conflito
+        return true; //false para que nao tem conflito
     else
-        return true // verdadeiro para caso haja conflito
+        return false; // verdadeiro para caso haja conflito
 }
