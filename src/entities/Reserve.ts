@@ -1,26 +1,37 @@
 import { IReservation } from './interfaces/reservation.interface.js'
 import type { IRoom } from './interfaces/room.interface.js';
 import { IUser } from './interfaces/user.interface.js';
+import { Gerenciamento } from './singleton.js';
 import { Strategy , ReservaNormal } from './strategy.js';
 
 export class ControlOfReservation {
     politicaDeReserva: Strategy = new ReservaNormal(); //strategia Defaut
     users: IUser[] = [];
     rooms: IRoom[] = [];
-    reservations: IReservation[] = [];
+    reservations: Reservation[] = [];
     
     //chamada para resevar
     reserve (idUser: number, idRoom: number, startTime: Date, endTime: Date) {
         try {
+            if (startTime >= endTime) {
+                throw new Error('Start time must be before end time');
+            }
             const user = this.users.find(user => user.id === idUser);
             const room = this.rooms.find(room => room.id === idRoom);
             if (!user || !room) {
                 throw new Error('User or room not found');
             }
-            //arrumar um jeito de retonar um IReservation
-            this.politicaDeReserva.execute()
-
-        } catch (error) {}
+            console.log(`Tentando reservar a sala ${room.id} para o usuário ${user.name} no período de ${startTime} a ${endTime}`);
+            const reserva = this.politicaDeReserva.execute(user, room, startTime, endTime, this.reservations);
+            if (reserva) {
+                this.reservations.push(reserva);
+            }
+            console.log(`Reserva ${reserva ? 'realizada com sucesso' : 'falhou'}`);
+        } catch (error) {
+            if (error instanceof Error) {
+                console.error(error.message);
+            }
+        }
     }
 
     cancelReservation (idReservation: number) {
@@ -28,7 +39,8 @@ export class ControlOfReservation {
         if (!reservation) {
             throw new Error('Reservation not found');
         } else {
-            //reservation.room.reserved = false;
+            if (reservation.room)
+                reservation.room.reserved = false;
         }
     }
 
@@ -51,32 +63,44 @@ export class Reservation implements IReservation {
     room: IRoom | undefined;
 
     constructor(
-        id: number,
         userId: number,
         roomId: number,
         startTime: Date,
         endTime: Date,
-        users: IUser[],
-        rooms: IRoom[]
+        user: IUser | undefined,
+        room: IRoom | undefined
     ) {
-        this.id = id;
+        //id gerado pelo sistema usando config do singleton
+        this.id = Gerenciamento.getInstance().NReservation++;
+
         this.userId = userId;
         this.roomId = roomId;
         this.startTime = startTime;
         this.endTime = endTime;
         this.createdAt = new Date();
         this.updatedAt = new Date();
-        this.user = users.find(user => user.id === this.userId)
-        this.room = rooms.find(room => room.id === roomId) as IRoom;
-        this.room.reserved = true;
+        this.user = user;
+        this.room = room;
+        if (this.room)
+            this.room.reserved = true;
     }
     
     public print () {
-        console.log("teste")
         if (this.user && this.room)
-            console.log(`Reservation ${this.id}: ${this.user.name} - ${this.room.type}`);
+            console.log(`Reservation ${this.id}: ${this.user.name} - ${this.room.type} | ${this.startTime} to ${this.endTime}`);
         else
             console.log(`Reservation ${this.id}: No user or room found`);
     }
 
+}
+
+export function ConflitoAgenda (dataInit1: Date, dataFim2: Date, dataInit2: Date, dataFim1: Date): boolean {
+    console.log(`Comparando datas: ${dataInit1} - ${dataFim1} com ${dataInit2} - ${dataFim2}`);
+    if (dataInit1 <= dataFim2 && dataInit2 <= dataFim1) {//funçao qu compara conflito entre datas
+        console.log("A Sala já está reservada para o período solicitado.");
+        return true; //verdadeiro para que tem conflito
+    } else {
+        console.log("A Sala não está reservada para o período solicitado.");
+        return false; // false para caso nao haja conflito
+    }
 }

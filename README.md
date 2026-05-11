@@ -8,6 +8,17 @@ Estrutura inicial do projeto com suporte a TypeScript.
 
 #
 
+- [ ] Factory
+- [ ] Strategy  
+- [ ] Obseerve
+- [ ] Singleton
+- [ ] *Adicional* Decorator 
+
+## Version 1.1.1
+Add PoliticaNormal
+- adicionado metodo de strategia normal para reserva de sala, ainda falta politica de prioridade,
+- implemntado uma funnçao para comprar comflitos de dados
+
 ## Version 1.1.0
 AddReservation
 - adicioado 2 classes, reserva e conntrole dee reserva
