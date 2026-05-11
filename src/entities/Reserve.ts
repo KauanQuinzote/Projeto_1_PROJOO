@@ -89,7 +89,7 @@ export class Reservation implements IReservation {
 
 export function ConflitoAgenda (dataInit1: Date, dataFim2: Date, dataInit2: Date, dataFim1: Date): boolean {
     if (dataInit1 < dataFim2 && dataInit2 < dataFim1)//funçao qu compara conflito entre datas
-        return true; //false para que nao tem conflito
+        return true; //verdadeiro para que nao tem conflito
     else
-        return false; // verdadeiro para caso haja conflito
+        return false; // false para caso haja conflito
 }
