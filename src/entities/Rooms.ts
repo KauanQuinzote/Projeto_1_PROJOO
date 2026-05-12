@@ -1,5 +1,5 @@
 import type { IRoom } from './interfaces/room.interface.js';
-import { ISubject, IObserver } from './interfaces/observer.interface.js';
+import { IObserver } from './interfaces/observer.interface.js';
 
 export class Lab implements IRoom {
     id: number;
