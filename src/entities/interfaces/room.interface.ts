@@ -1,5 +1,4 @@
 import { IObserver } from './observer.interface.js';
-
 export type RoomType = 'Lab' | 'Individual' | 'Group';
 
 export interface IRoom {
