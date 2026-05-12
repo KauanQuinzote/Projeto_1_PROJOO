@@ -1,6 +1,6 @@
 import type { UserRole, IUser } from "./interfaces/user.interface.js";
 import { IObserver } from "./interfaces/observer.interface.js";
-import { Gerenciamento } from "./singleton.js";
+import { Gerenciamento } from "./Singleton.js";
 
 export class Professor implements IUser, IObserver {
     id: number;
