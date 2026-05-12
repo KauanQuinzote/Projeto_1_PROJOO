@@ -7,6 +7,9 @@
     "doc": "docs"
   },
   "scripts": {
+    "build": "tsc -p .",
+    "start": "node ./dist/app/main.js",
+    "typecheck": "tsc -p . --noEmit",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -16,13 +19,13 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "type": "commonjs",
   "bugs": {
     "url": "https://github.com/KauanQuinzote/Projeto_1_PROJOO/issues"
   },
   "homepage": "https://github.com/KauanQuinzote/Projeto_1_PROJOO#readme",
   "type": "module",
   "devDependencies": {
+    "@types/node": "^20.0.0",
     "typescript": "^6.0.3"
   }
 }

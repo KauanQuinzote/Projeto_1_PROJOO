@@ -1,0 +1,1 @@
+{"version":3,"file":"Singleton.d.ts","sourceRoot":"","sources":["../../src/patterns/Singleton.ts"],"names":[],"mappings":"AAEA,qBAAa,aAAa;IACtB,OAAO,CAAC,MAAM,CAAC,QAAQ,CAAgB;IAEhC,YAAY,EAAE,MAAM,CAAC;IACrB,KAAK,EAAE,MAAM,CAAC;IACd,KAAK,EAAE,MAAM,CAAC;IAErB,OAAO;IAMP,IAAI,YAAY,IAAK,MAAM,CAE1B;IAED,IAAI,KAAK,IAAK,MAAM,CAEnB;WAEa,WAAW,IAAK,aAAa;CAM9C"}

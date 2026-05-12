@@ -1,17 +1,17 @@
 import { IReservation } from './interfaces/reservation.interface.js'
 import { IRoom } from './interfaces/room.interface.js';
 import { IUser } from './interfaces/user.interface.js';
-import { Gerenciamento } from './singleton.js';
-import { Strategy , ReservaNormal } from './strategy.js';
+import type { IObserver } from './interfaces/observer.interface.js';
+import { Gerenciamento } from './Singleton.js';
+import { Strategy , ReservaNormal } from './Strategy.js';
 
 export class ControlOfReservation {
-    politicaDeReserva: Strategy = new ReservaNormal(); //strategia Defaut
-    users: IUser[] = [];
+    politicaDeReserva: Strategy = new ReservaNormal();
+    users: (IUser & IObserver)[] = [];
     rooms: IRoom[] = [];
     reservations: Reservation[] = [];
     
-    //chamada para resevar
-    reserve (idUser: number, idRoom: number, startTime: Date, endTime: Date) {
+    reserve (idUser: number, idRoom: number, startTime: Date, endTime: Date): Reservation | undefined {
         try {
             if (startTime >= endTime) {
                 throw new Error('Start time must be before end time');
@@ -21,17 +21,20 @@ export class ControlOfReservation {
             if (!user || !room) {
                 throw new Error('User or room not found');
             }
-            console.log(`Tentando reservar a sala ${room.id} para o usuário ${user.name} no período de ${startTime} a ${endTime}`);
             const reserva = this.politicaDeReserva.execute(user, room, startTime, endTime, this.reservations);
             if (reserva) {
                 this.reservations.push(reserva);
             }
             console.log(`Reserva ${reserva ? 'realizada com sucesso' : 'falhou'}`);
+
+            return reserva;
         } catch (error) {
             if (error instanceof Error) {
                 console.error(error.message);
             }
         }
+
+        return undefined;
     }
 
     cancelReservation (idReservation: number) {
@@ -81,8 +84,10 @@ export class Reservation implements IReservation {
         this.updatedAt = new Date();
         this.user = user;
         this.room = room;
-        if (this.room)
-            this.room.reserved = true;
+        if (this.room) {
+            // Usar o setter para atualizar timestamps e notificar observers.
+            this.room.setReserved(true);
+        }
     }
     
     public print () {
