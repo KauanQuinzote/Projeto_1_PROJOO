@@ -1,5 +1,5 @@
 import { IReservation } from './interfaces/reservation.interface.js'
-import type { IRoom } from './interfaces/room.interface.js';
+import { IRoom } from './interfaces/room.interface.js';
 import { IUser } from './interfaces/user.interface.js';
 import { Gerenciamento } from './singleton.js';
 import { Strategy , ReservaNormal } from './strategy.js';

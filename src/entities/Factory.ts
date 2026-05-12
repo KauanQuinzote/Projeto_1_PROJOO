@@ -1,10 +1,9 @@
-import { IRoom } from "./interfaces/room.interface.js";
-import type { RoomType } from "./interfaces/room.interface.js";
+import { IRoom, RoomType } from "./interfaces/room.interface.js";
 import { Group, Individual, Lab } from "./Rooms.js";
 
 export class RoomFactory {
     private constructor() {}
-    
+
     static createRoom(type: RoomType, reserved = false): IRoom {
         const id = Math.floor(Math.random() * 10000);
         

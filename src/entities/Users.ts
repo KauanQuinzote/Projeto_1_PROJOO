@@ -1,7 +1,8 @@
 import type { UserRole, IUser } from "./interfaces/user.interface.js";
+import { IObserver } from "./interfaces/observer.interface.js";
 import { Gerenciamento } from "./singleton.js";
 
-export class Professor implements IUser {
+export class Professor implements IUser, IObserver {
     id: number;
     name: string;
     email: string;
@@ -18,9 +19,14 @@ export class Professor implements IUser {
         this.createdAt = new Date();
         this.updatedAt = new Date();
     }
+
+    update(roomId: number, roomType: string, reserved: boolean): void {
+        const status = reserved ? 'RESERVADA' : 'DISPONÍVEL';
+        console.log(`[Professor ${this.name}] Notificação: Sala ${roomId} (${roomType}) está ${status}`);
+    }
 }
 
-export class Student implements IUser {
+export class Student implements IUser, IObserver {
     id: number;
     name: string;
     email: string;
@@ -36,5 +42,10 @@ export class Student implements IUser {
         this.password = password;
         this.createdAt = new Date();
         this.updatedAt = new Date();
+    }
+
+    update(roomId: number, roomType: string, reserved: boolean): void {
+        const status = reserved ? 'RESERVADA' : 'DISPONÍVEL';
+        console.log(`[Aluno ${this.name}] Notificação: Sala ${roomId} (${roomType}) está ${status}`);
     }
 }
