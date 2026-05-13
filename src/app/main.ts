@@ -4,6 +4,7 @@ import { stdin as input, stdout as output } from 'node:process';
 
 import { ControlOfReservation } from '../patterns/Reserve.js';
 import { Professor, Student } from '../patterns/Users.js';
+import { ReservationAccessProxy } from '../patterns/Proxy.js';
 import { RoomFactory } from '../patterns/Factory.js';
 import { CoffeeAreaRoom, CleaningServiceRoom, ProjectorRoom } from '../patterns/Decorator.js';
 import type { RoomType } from '../patterns/interfaces/room.interface.js';
@@ -297,14 +298,38 @@ async function handleScheduleRoom(rl: ReturnType<typeof createInterface>, contro
 	}
 }
 
-function handleConsultReservations(control: ControlOfReservation): void {
-	console.log('\n-- Reservas Existentes --');
-	if (control.reservations.length === 0) {
-		console.log('Nenhuma reserva encontrada.');
+async function handleConsultReservations(
+	rl: ReturnType<typeof createInterface>,
+	proxy: ReservationAccessProxy,
+): Promise<void> {
+	console.log('\n-- Consultar Reservas (Proxy) --');
+
+	const email = await askNonEmpty(rl, 'Email: ');
+	const password = await askNonEmpty(rl, 'Senha: ');
+	const user = proxy.login(email, password);
+
+	if (!user) {
+		console.log('Acesso negado: email ou senha inválidos.');
 		return;
 	}
 
-	control.reservations.forEach((reservation) => {
+	let reservations;
+	try {
+		reservations = proxy.listReservations();
+	} catch (error) {
+		if (error instanceof Error) {
+			console.log(error.message);
+		}
+		return;
+	}
+
+	console.log(`Logado como: ${user.name} (${user.role})`);
+	if (reservations.length === 0) {
+		console.log('Nenhuma reserva encontrada para este acesso.');
+		return;
+	}
+
+	reservations.forEach((reservation) => {
 		const userName = reservation.user?.name ?? 'Desconhecido';
 		const userRole = reservation.user?.role ?? 'N/A';
 		const roomType = reservation.room?.type ?? 'N/A';
@@ -323,6 +348,7 @@ function handleConsultReservations(control: ControlOfReservation): void {
 export async function main(): Promise<void> {
 	const rl = createInterface({ input, output });
 	const control = new ControlOfReservation();
+	const reservationProxy = new ReservationAccessProxy(control);
 
 	// Mantém pelo menos 1 sala de cada tipo disponível para agendamento.
 	(['Lab', 'Individual', 'Group'] as const).forEach((type) => {
@@ -351,7 +377,7 @@ export async function main(): Promise<void> {
 			}
 
 			if (choice === '4') {
-				handleConsultReservations(control);
+				await handleConsultReservations(rl, reservationProxy);
 				continue;
 			}
 		}
