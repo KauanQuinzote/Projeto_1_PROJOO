@@ -40,7 +40,6 @@ export class ReservationAccessProxy {
 			return this.control.reservations.filter(r => r.userId === this.currentUser!.id);
 		}
 
-		// Caso surja um novo role no futuro.
 		return [];
 	}
 }
