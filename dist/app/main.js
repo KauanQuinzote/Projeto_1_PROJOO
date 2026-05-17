@@ -257,9 +257,27 @@ async function handleConsultReservations(rl, proxy) {
     console.log('\n-- Consultar Reservas (Proxy) --');
     const email = await askNonEmpty(rl, 'Email: ');
     const password = await askNonEmpty(rl, 'Senha: ');
-    const user = proxy.login(email, password);
+    let user;
+    try {
+        user = proxy.login(email, password);
+    }
+    catch (error) {
+        if (error instanceof Error) {
+            console.log(error.message);
+        }
+        else {
+            console.log('Erro no login. Tente novamente mais tarde.');
+        }
+        return;
+    }
     if (!user) {
-        console.log('Acesso negado: email ou senha inválidos.');
+        const left = proxy.attemptsLeft(email);
+        if (left <= 0) {
+            console.log('Conta bloqueada: número máximo de tentativas excedido.');
+        }
+        else {
+            console.log(`Acesso negado: email ou senha inválidos. Tentativas restantes: ${left}`);
+        }
         return;
     }
     let reservations;
