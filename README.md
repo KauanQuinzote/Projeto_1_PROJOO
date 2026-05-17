@@ -12,7 +12,8 @@ Estrutura inicial do projeto com suporte a TypeScript.
 - [ ] Strategy  
 - [ ] Obseerve
 - [ ] Singleton
-- [ ] *Adicional* Decorator 
+- [ ] *Adicional* Decorator
+- [ ] Proxy
 
 ## Version 1.2.0
 Add Singleton

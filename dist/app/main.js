@@ -2,6 +2,7 @@ import { createInterface } from 'node:readline/promises';
 import { stdin as input, stdout as output } from 'node:process';
 import { ControlOfReservation } from '../patterns/Reserve.js';
 import { Professor, Student } from '../patterns/Users.js';
+import { ReservationAccessProxy } from '../patterns/Proxy.js';
 import { RoomFactory } from '../patterns/Factory.js';
 import { CoffeeAreaRoom, CleaningServiceRoom, ProjectorRoom } from '../patterns/Decorator.js';
 function normalizeChoice(raw) {
@@ -252,13 +253,49 @@ async function handleScheduleRoom(rl, control) {
         printRoomAddons(reservation.room);
     }
 }
-function handleConsultReservations(control) {
-    console.log('\n-- Reservas Existentes --');
-    if (control.reservations.length === 0) {
-        console.log('Nenhuma reserva encontrada.');
+async function handleConsultReservations(rl, proxy) {
+    console.log('\n-- Consultar Reservas (Proxy) --');
+    const email = await askNonEmpty(rl, 'Email: ');
+    const password = await askNonEmpty(rl, 'Senha: ');
+    let user;
+    try {
+        user = proxy.login(email, password);
+    }
+    catch (error) {
+        if (error instanceof Error) {
+            console.log(error.message);
+        }
+        else {
+            console.log('Erro no login. Tente novamente mais tarde.');
+        }
         return;
     }
-    control.reservations.forEach((reservation) => {
+    if (!user) {
+        const left = proxy.attemptsLeft(email);
+        if (left <= 0) {
+            console.log('Conta bloqueada: número máximo de tentativas excedido.');
+        }
+        else {
+            console.log(`Acesso negado: email ou senha inválidos. Tentativas restantes: ${left}`);
+        }
+        return;
+    }
+    let reservations;
+    try {
+        reservations = proxy.listReservations();
+    }
+    catch (error) {
+        if (error instanceof Error) {
+            console.log(error.message);
+        }
+        return;
+    }
+    console.log(`Logado como: ${user.name} (${user.role})`);
+    if (reservations.length === 0) {
+        console.log('Nenhuma reserva encontrada para este acesso.');
+        return;
+    }
+    reservations.forEach((reservation) => {
         const userName = reservation.user?.name ?? 'Desconhecido';
         const userRole = reservation.user?.role ?? 'N/A';
         const roomType = reservation.room?.type ?? 'N/A';
@@ -273,6 +310,7 @@ function handleConsultReservations(control) {
 export async function main() {
     const rl = createInterface({ input, output });
     const control = new ControlOfReservation();
+    const reservationProxy = new ReservationAccessProxy(control);
     // Mantém pelo menos 1 sala de cada tipo disponível para agendamento.
     ['Lab', 'Individual', 'Group'].forEach((type) => {
         const room = RoomFactory.createRoom(type, false);
@@ -295,7 +333,7 @@ export async function main() {
                 continue;
             }
             if (choice === '4') {
-                handleConsultReservations(control);
+                await handleConsultReservations(rl, reservationProxy);
                 continue;
             }
         }
